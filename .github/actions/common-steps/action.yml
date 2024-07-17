@@ -7,7 +7,11 @@ runs:
   steps:
     - name: Install SFDX
       run: |
-           npm i @salesforce/cli
+           npm -g i @salesforce/cli
+      shell: bash
+
+    - name: Install SGD
+      run: |
            echo 'y' | sf plugins install sfdx-git-delta
       shell: bash
 
