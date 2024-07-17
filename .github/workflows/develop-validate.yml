@@ -2,7 +2,11 @@
 name: Develop - PR Validation
 
 on:
-  workflow_dispatch
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'src/**'
 
 jobs:
   PMD:
