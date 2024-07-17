@@ -2,7 +2,11 @@
 name: Release - Deployment to UAT,Pre-Prod & Prod
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - release
+    paths:
+      - 'src/**'
 
 jobs:
   Build:
