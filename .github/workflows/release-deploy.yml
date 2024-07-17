@@ -1,0 +1,33 @@
+# .github/workflows/develop-deploy.yml
+name: Release - Deployment to UAT,Pre-Prod & Prod
+
+on:
+  workflow_dispatch
+
+jobs:
+  Build:
+    uses: ./.github/workflows/build-template.yml
+    
+  UAT:
+    uses: ./.github/workflows/deploy-template.yml
+    with:
+      envname: 'UAT'
+    needs: Build
+
+  PREPROD:
+    uses: ./.github/workflows/deploy-template.yml
+    with:
+      envname: 'PREPROD'
+    needs: Build
+    
+  PRODVALIDATION:
+    uses: ./.github/workflows/validate-template.yml
+    with:
+      envname: 'PROD'
+    needs: Build
+
+  PROD:
+    uses: ./.github/workflows/deploy-template.yml
+    with:
+      envname: 'PROD'
+    needs: PRODVALIDATION
