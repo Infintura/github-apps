@@ -2,7 +2,7 @@ name: Salesforce Code Analyzer Workflow
 on: 
   workflow_call:
 jobs:
-  salesforce-code-analyzer:
+  analyzer:
     runs-on: ubuntu-latest
     steps:
       - name: Check out files
