@@ -16,7 +16,7 @@ jobs:
     uses: ./.github/workflows/build-template.yml
     needs: PMD
 
-  QA:
+  UAT:
     uses: ./.github/workflows/validate-template.yml
     with:
       envname: 'UAT'
