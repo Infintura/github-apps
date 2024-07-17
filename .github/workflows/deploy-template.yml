@@ -105,12 +105,12 @@ jobs:
               if [ "$TEST_CLASS_STRING" == "" ];
               then
                 echo "No classes found, deploying without running Apex Tests" 
-                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
-                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests --tests skip
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests --tests skip
               else
                 echo "Class found, deploying with Apex Tests"
-                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
-                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result
               fi
             else
               echo "No Salesforce Change to deploy."
