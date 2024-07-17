@@ -1,5 +1,5 @@
 # .github/workflows/build-template.yml
-name: deploy template
+name: build template
 
 on:
   workflow_call:
@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
         
       - name: Environment set up
         uses: ./.github/actions/common-steps
@@ -18,8 +20,7 @@ jobs:
       - name: Generate Delta Package
         run: |
             mkdir delta-package
-            sfdx sgd:source:delta --from "HEAD~1" --to "HEAD" --output "delta-package" --generate-delta
-        shell: bash
+            sf sgd:source:delta --from "HEAD~1" --to "HEAD" --output "delta-package" --generate-delta
         
       - name: Create sfdx-project.json
         run: |
