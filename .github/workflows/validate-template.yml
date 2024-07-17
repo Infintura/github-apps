@@ -34,6 +34,7 @@ jobs:
       - name: Deploy to ${{ inputs.envname }}
         run: |
             cd delta-artifact
+            ls
             WORK_SPACE="src"
 
             echo $WORK_SPACE
