@@ -23,11 +23,9 @@ jobs:
 
       - name: Authenticate to ${{ inputs.envname }}
         run: |
-            echo $SFDX_AUTH_URL > ./authfile
+            echo ${{ vars.SFDX_AUTH_URL }} > ./authfile
             cat authfile
             sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
-        env:
-          AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
 
       - uses: actions/download-artifact@v4
         with:
