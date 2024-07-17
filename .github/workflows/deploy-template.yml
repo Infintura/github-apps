@@ -11,7 +11,7 @@ on:
         default: QA
 
 jobs:
-  deployment:
+  deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.envname }}
     steps:
@@ -22,4 +22,4 @@ jobs:
         run: echo "Hello, ${{ inputs.envname }}!"
       
       - name: Print secret
-        run: echo "The secret is ${{ secrets.SFDX_AUTH_URL }}"
+        run: echo "The secret is ${{ vars.ENV_NAME }}"
