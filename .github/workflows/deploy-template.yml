@@ -25,8 +25,11 @@ jobs:
 
       - name: Authenticate to ${{ inputs.envname }}
         run: |
-            echo ${{ secrets.SFDX_AUTH_URL }} > ./authfile
+            echo $SFDX_AUTH_URL > ./authfile
             sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
+        env:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+          
       - uses: actions/download-artifact@v4
         with:
           name: delta-artifact
