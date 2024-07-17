@@ -2,7 +2,11 @@
 name: Develop - Deployment to QA
 
 on:
-  workflow_dispatch
+  push:
+    branches:
+      - develop
+    paths:
+      - 'src/**'
 
 jobs:
   Build:
