@@ -18,11 +18,94 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         
-      - name: environment set up
+      - name: Environment set up
         uses: ./.github/actions/common-steps
 
-      - name: Print greeting
-        run: echo "Hello, ${{ inputs.envname }}!"
+      - name: Authenticate to ${{ inputs.envname }}
+        run: |
+            echo ${{ secrets.SFDX_AUTH_URL }} > ./authfile
+            sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: delta-artifact
       
-      - name: Print secret
-        run: echo "The secret is ${{ vars.ENV_NAME }}"
+      - name: Deploy to ${{ inputs.envname }}
+        run: |
+            cd delta-artifact
+            WORK_SPACE="src"
+
+            echo $WORK_SPACE
+            echo "INFO:Iterate through multiple folders to find /classes and /triggers directories";
+
+            # Initialize TEST_CLASS_STRING to an empty string
+            TEST_CLASS_STRING=""
+            COUNTER=0
+
+            folders_list=$(find "${WORK_SPACE}" \( -name "classes" -o -name "triggers" \) -type d)
+
+            for folder in ${folders_list}; do
+                echo "#########################################################"
+                echo "Class or Trigger folder"
+                echo "Folder Path : ${folder}"
+                echo "#########################################################"
+                echo "Iterate through files to find apex classes and triggers";
+                
+                files_list=$(find "${folder}" -type f -name "*.cls" -o -name "*.trigger")
+
+                for file in ${files_list}; do
+                    if ! grep -i -q @istest "$file"; then
+                        FILE_NAME="$(basename -- $file)"
+                        FILE_NAME="$(echo ${FILE_NAME/.cls/})"
+                        FILE_NAME="$(echo ${FILE_NAME/.trigger/})"
+                        echo "Deploy with specified tests : $FILE_NAME "
+                        #echo "FILE_NAME:$FILE_NAME_NO_EXT"
+                        # extract apex test class from the class header
+                      if grep -i -q "@testClass" "$file"; then
+                          test_line=$(grep -i "@testClass" "$file")
+                          test_line_cleaned=$(echo "$test_line" | sed 's/\s*@testClass\s*//I' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' | sed 's/\*//g')
+                          TEST_CLASS_STRING="${TEST_CLASS_STRING},${test_line_cleaned}"
+                      fi
+                      # Build up test class string
+                        TEST_CLASS_STRING="${TEST_CLASS_STRING},${FILE_NAME}Test,${FILE_NAME}_Test,Test${FILE_NAME},Test_${FILE_NAME}"
+
+                        COUNTER=$(( COUNTER + 1 ))
+                    fi
+                done
+            done
+            echo ""
+            echo "${COUNTER} apex classes found in the delta pacakge"
+            echo ""
+            # Remove leading comma from TEST_CLASS_STRING
+            TEST_CLASS_STRING="${TEST_CLASS_STRING#,}"
+
+            # Print out the consolidated TEST_CLASS_STRING
+            echo "Consolidated TEST_CLASS_STRING:"
+            echo "${TEST_CLASS_STRING}"
+            echo ""
+
+            IFS=', ' read -r -a array <<EOF
+            $input_string
+            EOF
+
+            result=""
+
+            # Iterate over the array and construct the result string
+            for element in "${array[@]}"; do
+                result="$result --test $element"
+            done
+
+            ls
+            if [ "$(ls -A src)" ]; then
+              if [ "$TEST_CLASS_STRING" == "" ];
+              then
+                echo "No classes found, deploying without running Apex Tests" 
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests --test skip
+              else
+                echo "Class found, deploying with Apex Tests"
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result
+              fi
+            else
+              echo "No Salesforce Change to deploy."
+            fi
