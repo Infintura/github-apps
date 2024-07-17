@@ -5,9 +5,10 @@ description: "A set of common steps to reuse in workflows"
 runs:
   using: "composite"
   steps:
-    - name: Print message
+    - name: Install SFDX
       run: |
            npm i @salesforce/cli
            echo 'y' | sfdx plugins:install sfdx-git-delta
+      shell: bash
 
 
