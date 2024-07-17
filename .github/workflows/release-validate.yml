@@ -2,7 +2,11 @@
 name: Release - PR Validation
 
 on:
-  workflow_dispatch
+  pull_request:
+    branches:
+      - release
+    paths:
+      - 'src/**'
 
 jobs:
   PMD:
