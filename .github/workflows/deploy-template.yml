@@ -1,0 +1,25 @@
+# .github/workflows/deploy-template.yml
+name: deploy template
+
+on:
+  workflow_call:
+    inputs:
+      envname:
+        description: 'the name of the environment'
+        required: true
+        type: string
+        default: QA
+
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.envname }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Print greeting
+        run: echo "Hello, ${{ inputs.envname }}!"
+      
+      - name: Print secret
+        run: echo "The secret is ${{ secrets.SFDX_AUTH_URL }}"
