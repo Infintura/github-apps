@@ -8,4 +8,5 @@ runs:
     - name: Print message
       run: npm i @salesforce/cli
            echo 'y' | sfdx plugins:install sfdx-git-delta
+      shell: bash
 
