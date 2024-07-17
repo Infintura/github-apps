@@ -1,0 +1,19 @@
+# .github/workflows/release-validate.yml
+name: Release - PR Validation
+
+on:
+  workflow_dispatch
+
+jobs:
+  PMD:
+    uses: ./.github/workflows/pmd.yml
+    
+  Build:
+    uses: ./.github/workflows/build-template.yml
+    needs: PMD
+
+  QA:
+    uses: ./.github/workflows/validate-template.yml
+    with:
+      envname: 'UAT'
+    needs: Build
