@@ -5,7 +5,7 @@ on:
   workflow_call:
   
 jobs:
-  deploy:
+  delta:
     runs-on: ubuntu-latest
     environment: ${{ inputs.envname }}
     steps:
