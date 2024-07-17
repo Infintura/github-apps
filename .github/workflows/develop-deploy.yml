@@ -7,13 +7,13 @@ on:
       - main
 
 jobs:
-  deploy-job:
+  deploy-QA:
     uses: ./.github/workflows/deploy-template.yml
     with:
       envname: 'QA'
 
-  deploy-job-2:
+  deploy-UAT:
     uses: ./.github/workflows/deploy-template.yml
     with:
       envname: 'UAT'
-    needs: deploy-job 
+    needs: deploy-QA
