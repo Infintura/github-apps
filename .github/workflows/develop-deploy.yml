@@ -7,7 +7,12 @@ on:
       - main
 
 jobs:
-  use-reusable-workflow:
+  deploy-job:
     uses: ./.github/workflows/deploy-template.yml
     with:
       envname: 'QA'
+
+  deploy-job-2:
+    uses: ./.github/workflows/deploy-template.yml
+    with:
+      envname: 'UAT'
