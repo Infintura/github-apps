@@ -104,8 +104,8 @@ jobs:
               if [ "$TEST_CLASS_STRING" == "" ];
               then
                 echo "No classes found, deploying without running Apex Tests" 
-                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests --test skip"
-                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests --test skip
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --dry-run --test-level NoTestRun"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --dry-run --test-level NoTestRun
               else
                 echo "Class found, deploying with Apex Tests"
                 echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --concise --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests $result"
