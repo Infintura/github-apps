@@ -6,7 +6,8 @@ runs:
   using: "composite"
   steps:
     - name: Print message
-      run: npm i @salesforce/cli
+      run: |
+           npm i @salesforce/cli
            echo 'y' | sfdx plugins:install sfdx-git-delta
-      shell: bash
+
 
