@@ -20,7 +20,7 @@ jobs:
       envname: 'PREPROD'
     needs: Build
     
-  PRODVALIDATION:
+  PROD-DRYRUN:
     uses: ./.github/workflows/validate-template.yml
     with:
       envname: 'PROD'
@@ -30,4 +30,8 @@ jobs:
     uses: ./.github/workflows/deploy-template.yml
     with:
       envname: 'PROD'
-    needs: PRODVALIDATION
+    needs: PROD-DRYRUN
+
+  UPDATE:
+    uses: ./.github/workflows/update-commit-id.yml
+    needs: PROD
