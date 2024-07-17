@@ -7,10 +7,14 @@ on:
       - main
 
 jobs:
+  PMD:
+    uses: ./.github/workflows/pmd.yml
+    
   QA:
     uses: ./.github/workflows/deploy-template.yml
     with:
       envname: 'QA'
+    needs: PMD
 
   UAT:
     uses: ./.github/workflows/deploy-template.yml
