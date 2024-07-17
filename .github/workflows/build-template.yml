@@ -1,0 +1,33 @@
+# .github/workflows/build-template.yml
+name: deploy template
+
+on:
+  workflow_call:
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.envname }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Environment set up
+        uses: ./.github/actions/common-steps
+
+      - name: Generate Delta Package
+        run: |
+            mkdir delta-package
+            sfdx sgd:source:delta --from "HEAD~1" --to "HEAD" --output "delta-package" --generate-delta
+        shell: bash
+        
+      - name: Create sfdx-project.json
+        run: |
+            mv .forceignore.delta delta-package/.forceignore
+            cp sfdx-project.json delta-package/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: delta-artifact
+          path: delta-package
+      
