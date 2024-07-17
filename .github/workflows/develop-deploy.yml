@@ -2,9 +2,7 @@
 name: Develop - Deployment to QA
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch
 
 jobs:
   PMD:
