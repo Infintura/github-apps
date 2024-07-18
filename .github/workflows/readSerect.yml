@@ -4,7 +4,7 @@ on:
 jobs:
   read:
     runs-on: ubuntu-latest
-    environment: UAT
+    environment: QA
     steps:
       - name: Check out files
         uses: actions/checkout@v4
