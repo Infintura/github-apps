@@ -17,19 +17,7 @@ jobs:
     needs: PMD
 
   QA:
-    runs-on: ubuntu-latest
-    environment: QA
-    needs: Build
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-         fetch-depth: 0
-         
-      - name: validate
-        uses: ./.github/workflows/validate-template.yml
-        with:
-          envname: 'UAT'
-          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+    uses: ./.github/workflows/validate-template.yml
+    with:
+      envname: 'UAT'
         

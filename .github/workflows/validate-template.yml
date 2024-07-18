@@ -9,9 +9,6 @@ on:
         required: true
         type: string
         default: QA
-      SFDX_AUTH_URL:
-        required: true
-        type: string
 
 jobs:
   validate:
