@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: validate
-        uses: ./.github/workflows/templates/validate-template.yml
+        uses: ./.github/workflows/validate-template.yml
         with:
           envname: 'UAT'
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
