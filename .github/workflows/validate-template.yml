@@ -21,11 +21,14 @@ jobs:
       - name: Environment set up
         uses: ./.github/actions/common-steps
 
-      - name: Authenticate to ${{ inputs.envname }}
+      - name: Authenticate to ${{ vars.ENV_NAME }}
         run: |
-            echo ${{ vars.SFDX_AUTH_URL }} > ./authfile
+            echo $auth_url > ./authfile
             cat authfile
             sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
+        env: 
+          auth_url: ${{ secrets.SFDX_AUTH_URL }}
+        shell: bash
 
       - uses: actions/download-artifact@v4
         with:
