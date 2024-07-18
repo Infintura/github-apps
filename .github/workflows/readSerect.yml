@@ -1,0 +1,26 @@
+name: Read Environment Variables
+on: 
+  workflow_dispatch
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    environment: UAT
+    steps:
+      - name: Check out files
+        uses: actions/checkout@v4
+        with:
+         fetch-depth: 0
+         
+      - name: Read variables
+        run: echo ${{ vars.ENV_NAME }}
+        shell: bash
+
+      - name: Read serects
+        run: |
+          echo 'SFDX_AUTH_URL'
+          echo $auth_url
+        env: 
+          auth_url: ${{ secrets.SFDX_AUTH_URL }}
+        shell: bash
+        
+        
