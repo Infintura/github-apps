@@ -17,9 +17,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+         fetch-depth: 0
         
-      - name: Environment set up
-        uses: ./.github/actions/common-steps
+      - name: Install SFDX
+        run: |
+              npm -g i @salesforce/cli
+        shell: bash
 
       - name: Authenticate to ${{ vars.ENV_NAME }}
         run: |
