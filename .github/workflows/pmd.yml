@@ -29,13 +29,3 @@ jobs:
           steps.run-code-analyzer.outputs.num-violations > 10
         run: exit 1
 
-      - name: touch a file
-        run: |
-            mkdir output
-            touch output/test.json
-        shell: bash
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: my-artifact
-          path: output # or path/to/artifact
