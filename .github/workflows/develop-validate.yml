@@ -17,7 +17,14 @@ jobs:
     needs: PMD
 
   QA:
-    uses: ./.github/workflows/validate-template.yml
-    with:
-      envname: 'UAT'
+    runs-on: ubuntu-latest
+    environment: QA
     needs: Build
+
+    steps:
+      - name: validate
+        uses: ./.github/workflows/templates/validate-template.yml
+        with:
+          envname: 'UAT'
+        secrets:
+          SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
