@@ -11,6 +11,11 @@ jobs:
         with:
          fetch-depth: 0
          
+      - name: Install SFDX
+        run: |
+             npm -g i @salesforce/cli
+        shell: bash
+         
       - name: Read variables
         run: echo ${{ vars.ENV_NAME }}
         shell: bash
@@ -19,6 +24,15 @@ jobs:
         run: |
           echo 'SFDX_AUTH_URL'
           echo $auth_url
+        env: 
+          auth_url: ${{ secrets.SFDX_AUTH_URL }}
+        shell: bash
+
+      - name: Authenticate to ${{ vars.ENV_NAME }}
+        run: |
+            echo $auth_url > ./authfile
+            cat authfile
+            sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
         env: 
           auth_url: ${{ secrets.SFDX_AUTH_URL }}
         shell: bash
