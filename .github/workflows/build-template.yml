@@ -20,7 +20,7 @@ jobs:
       - name: Generate Delta Package
         run: |
             mkdir delta-package
-            sf sgd:source:delta --from "HEAD~1" --to "HEAD" --output "delta-package" --generate-delta
+            sf sgd:source:delta --from ${{ vars.LAST_COMMIT_ID }} --to "HEAD" --output "delta-package" --generate-delta
         
       - name: Create sfdx-project.json
         run: |
