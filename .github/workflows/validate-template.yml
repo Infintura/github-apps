@@ -24,6 +24,14 @@ jobs:
         run: |
               npm -g i @salesforce/cli
         shell: bash
+      
+      - name: Read serects
+        run: |
+          echo 'SFDX_AUTH_URL'
+          echo $auth_url
+        env: 
+          auth_url: ${{ secrets.SFDX_AUTH_URL }}
+        shell: bash
 
       - name: Authenticate to ${{ vars.ENV_NAME }}
         run: |
