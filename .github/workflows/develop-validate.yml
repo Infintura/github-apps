@@ -26,5 +26,5 @@ jobs:
         uses: ./.github/workflows/templates/validate-template.yml
         with:
           envname: 'UAT'
-        secrets:
           SFDX_AUTH_URL: ${{ secrets.SFDX_AUTH_URL }}
+        
