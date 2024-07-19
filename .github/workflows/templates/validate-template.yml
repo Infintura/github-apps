@@ -1,4 +1,4 @@
-# .github/workflows/deploy-template.yml
+# .github/workflows/validate-template.yml
 name: deploy template
 
 on:
@@ -9,19 +9,30 @@ on:
         required: true
         type: string
         default: QA
+    secrets:
+      SFDX_AUTH_URL:
+        required: true
 
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
     environment: ${{ inputs.envname }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+         fetch-depth: 0
         
-      - name: Environment set up
-        uses: ./.github/actions/common-steps
+      - name: Install SFDX
+        run: |
+              npm -g i @salesforce/cli
+        shell: bash
+      
+      - name: Read serects
+        run: |
+          echo 'SFDX_AUTH_URL'
+          echo ${{ secrets.SFDX_AUTH_URL }}
+
 
       - name: Authenticate to ${{ vars.ENV_NAME }}
         run: |
@@ -32,7 +43,6 @@ jobs:
           auth_url: ${{ secrets.SFDX_AUTH_URL }}
         shell: bash
 
-
       - uses: actions/download-artifact@v4
         with:
           name: delta-artifact
@@ -40,7 +50,9 @@ jobs:
       
       - name: Deploy to ${{ inputs.envname }}
         run: |
+            ls
             cd delta-artifact
+            
             WORK_SPACE="src"
 
             echo $WORK_SPACE
@@ -108,12 +120,12 @@ jobs:
               if [ "$TEST_CLASS_STRING" == "" ];
               then
                 echo "No classes found, deploying without running Apex Tests" 
-                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
-                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests --tests skip
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests --tests skip"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests --tests skip
               else
                 echo "Class found, deploying with Apex Tests"
-                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result"
-                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --test-level RunSpecifiedTests $result
+                echo "sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests $result"
+                sf project deploy start  --source-dir src --target-org ${{ vars.ENV_NAME }} --ignore-conflicts -w 90 --verbose --dry-run --test-level RunSpecifiedTests $result
               fi
             else
               echo "No Salesforce Change to deploy."

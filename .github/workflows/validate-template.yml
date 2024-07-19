@@ -9,6 +9,9 @@ on:
         required: true
         type: string
         default: QA
+    secrets:
+      AUTH_URL:
+        required: true
 
 jobs:
   validate:
@@ -17,15 +20,30 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+         fetch-depth: 0
         
-      - name: Environment set up
-        uses: ./.github/actions/common-steps
-
-      - name: Authenticate to ${{ inputs.envname }}
+      - name: Install SFDX
         run: |
-            echo ${{ vars.SFDX_AUTH_URL }} > ./authfile
+              npm -g i @salesforce/cli
+        shell: bash
+      
+      - name: Read serects
+        run: |
+          echo 'SFDX_AUTH_URL'
+          echo $auth_url
+        env: 
+          auth_url: ${{ secrets.AUTH_URL }}
+
+
+      - name: Authenticate to ${{ vars.ENV_NAME }}
+        run: |
+            echo $auth_url > ./authfile
             cat authfile
             sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
+        env: 
+          auth_url: ${{ secrets.AUTH_URL }}
+        shell: bash
 
       - uses: actions/download-artifact@v4
         with:
