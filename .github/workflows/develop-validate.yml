@@ -22,5 +22,6 @@ jobs:
       envname: 'UAT'
     secrets:
       AUTH_URL: ${{ secrets.QA_SFDX_AUTH_URL }}
+    needs: Build
 
         
