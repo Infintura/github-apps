@@ -1,0 +1,13 @@
+# .github/workflows/test.yml
+name: TEST YAML
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  Update:
+    uses: ./.github/workflows/update-commit-id.yml
+    secrets:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    

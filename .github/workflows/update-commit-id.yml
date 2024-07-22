@@ -1,31 +1,28 @@
 name: Update Last Successful Commit Id
 on: 
   workflow_call:
+    secrets:
+      GH_TOKEN:
+        required: true
 jobs:
   analyzer:
     runs-on: ubuntu-latest
     environment: PROD
     steps:
-      - name: Get Last Commit Id on the branch
-        run: |
-           latest_commit=$(git rev-parse HEAD)
-           echo "Latest commit ID: $latest_commit"
-           # Save the commit ID as an output
-           echo "::set-output name=commit_id::$latest_commit"
-           
-      - name: Authenticate to PROD
-        run: |
-            echo ${{ secrets.SFDX_AUTH_URL }} > ./authfile
-            sfdx auth:sfdxurl:store -f authfile -a ${{ vars.ENV_NAME }}
-      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0           
 
       - name: Update last commit id 
         run: |
-          filepath="scripts/apex/updateCommitId.apex" 
-          cat $filepath
-          echo "Replacing commid Id...."
-          sed -i -e 's/LAST.COMMIT.ID/${{ steps.get_commit.outputs.commit_id }}/' $filepath
-          echo "done."
-          cat $filepath
-          sf apex run --target-org ${{ vars.ENV_NAME }} --file scripts/apex/updateCommitId.apex
-
+          latest_commit=$(git rev-parse HEAD)
+          curl -L \
+            -X PATCH \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $gh_token" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Infintura/github-apps/actions/variables/LAST_COMMIT_ID \
+            -d '{"name":"LAST_COMMIT_ID","value":"$latest_commit"}'
+        env: 
+          gh_token: ${{ secrets.GH_TOKEN }}
