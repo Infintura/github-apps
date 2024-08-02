@@ -19,6 +19,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Environment set up
+        uses: ./.github/actions/common-steps
+
       - name: install dotenv
         run: |
             npm i dotenv
