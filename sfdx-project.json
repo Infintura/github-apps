@@ -1,0 +1,16 @@
+{
+    "packageDirectories": [
+       {
+         "path": "src",
+         "default": true
+       }
+    ],
+    "name": "myproj",
+    "replacements": [
+      {
+        "filename": "src/classes/test.cls",
+        "stringToReplace": "$REPLACE_ME",
+        "replaceWithEnv": "THE_REPLACEMENT"  
+      }
+    ]
+  }

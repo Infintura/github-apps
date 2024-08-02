@@ -6,8 +6,9 @@ on:
 
 
 jobs:
-  Update:
-    uses: ./.github/workflows/update-commit-id.yml
-    secrets:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  Replace:
+    uses: ./.github/workflows/string-replace.yml
+    with:
+      envPath: org-specific/.qa.env
+      envname: QA
     

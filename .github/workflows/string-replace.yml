@@ -1,0 +1,38 @@
+name: Replace String during the deployment
+on: 
+  workflow_call:
+    inputs:
+      envPath:
+        required: true
+        type: string
+      envname:
+        description: 'the name of the environment'
+        required: true
+        type: string
+        default: QA
+jobs:
+  string:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: install dotenv
+        run: |
+            npm i dotenv
+            
+      - name: Authenticate to ${{ inputs.envname }}
+        run: |
+            echo ${{ secrets.QA_SFDX_AUTH_URL }} > ./authfile
+            sfdx auth:sfdxurl:store -f authfile -a ${{ inputs.envname }}
+
+      - name: String Replacement  
+        run: |
+          # move org specific env file as .env
+          mv ${{ inputs.envPath }} .env
+          ls
+          dotenv -e .env sf project deploy start --source-dir src
+
+
