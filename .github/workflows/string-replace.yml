@@ -28,8 +28,10 @@ jobs:
             
       - name: Authenticate to ${{ inputs.envname }}
         run: |
-            echo ${{ secrets.QA_SFDX_AUTH_URL }} > ./authfile
+            echo $AUTH_URL > ./authfile
             sfdx auth:sfdxurl:store -f authfile -a ${{ inputs.envname }}
+        env:
+            AUTH_URL: ${{ secrets.QA_SFDX_AUTH_URL }}
 
       - name: String Replacement  
         run: |
