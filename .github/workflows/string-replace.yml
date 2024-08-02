@@ -41,6 +41,6 @@ jobs:
           # move org specific env file as .env
           mv ${{ inputs.envPath }} .env
           ls
-          dotenv -- sf project deploy start --source-dir src
+          dotenv -- sf project deploy start --source-dir src -o ${{ inputs.envname }}
 
 
