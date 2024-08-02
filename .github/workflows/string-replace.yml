@@ -10,6 +10,9 @@ on:
         required: true
         type: string
         default: QA
+    secrets:
+        AUTH_URL:
+            required: true
 jobs:
   string:
     runs-on: ubuntu-latest
@@ -28,10 +31,10 @@ jobs:
             
       - name: Authenticate to ${{ inputs.envname }}
         run: |
-            echo $AUTH_URL > ./authfile
+            echo $auth_url > ./authfile
             sfdx auth:sfdxurl:store -f authfile -a ${{ inputs.envname }}
         env:
-            AUTH_URL: ${{ secrets.QA_SFDX_AUTH_URL }}
+            auth_url: ${{ secrets.AUTH_URL }}
 
       - name: String Replacement  
         run: |

@@ -11,4 +11,6 @@ jobs:
     with:
       envPath: org-specific/.qa.env
       envname: QA
+    secrets:
+      AUTH_URL: ${{ secrets.QA_SFDX_AUTH_URL }}
     
