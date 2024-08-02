@@ -8,7 +8,7 @@
     "name": "myproj",
     "replacements": [
       {
-        "filename": "src/classes/test.cls",
+        "filename": "src/labels/CustomLabels.labels-meta.xml",
         "stringToReplace": "$REPLACE_ME",
         "replaceWithEnv": "THE_REPLACEMENT"  
       }
